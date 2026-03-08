@@ -4,47 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FIWARE Supermarkets{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
-    <header>
-        <nav>
-            <a href="{{ url_for('main.home') }}">Home</a>
-            <a href="{{ url_for('main.products') }}">Products</a>
-            <a href="{{ url_for('main.stores') }}">Stores</a>
-            <a href="{{ url_for('main.employees') }}">Employees</a>
-            <a href="{{ url_for('main.stores_map') }}">Stores Map</a>
-            <select id="lang-selector">
-                <option value="es" {% if current_locale == 'es' %}selected{% endif %}>Español</option>
-                <option value="en" {% if current_locale == 'en' %}selected{% endif %}>English</option>
-            </select>
-            <script>
-                document.getElementById('lang-selector').addEventListener('change', function() {
-                    const form = document.createElement('form');
-                    form.method = 'post';
-                    form.action = '/set-language';
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = 'lang';
-                    input.value = this.value;
-                    form.appendChild(input);
-                    document.body.appendChild(form);
-                    form.submit();
-                });
-            </script>
-        </nav>
-    </header>
-    <main>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold text-success" href="{{ url_for('main.home') }}">
+                <i class="fas fa-store"></i> FIWARE Supermarkets
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.home') }}"><i class="fas fa-home"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.products') }}"><i class="fas fa-box"></i> Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.stores') }}"><i class="fas fa-map-marker-alt"></i> Stores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.employees') }}"><i class="fas fa-users"></i> Employees</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.stores_map') }}"><i class="fas fa-map"></i> Stores Map</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <select id="lang-selector" class="form-select me-2" style="width: auto;">
+                        <option value="es" {% if current_locale == 'es' %}selected{% endif %}>Español</option>
+                        <option value="en" {% if current_locale == 'en' %}selected{% endif %}>English</option>
+                    </select>
+                    <button id="theme-toggle" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <main class="container mt-4">
         {% block content %}{% endblock %}
     </main>
     <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
     <script>
         window.I18N = {
             price_changed: "Price changed",
             low_stock: "Low stock alert"
         };
+
+        // Language selector
+        document.getElementById('lang-selector').addEventListener('change', function() {
+            const form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/set-language';
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'lang';
+            input.value = this.value;
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-bs-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', newTheme);
+            this.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true });
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

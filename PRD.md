@@ -87,3 +87,15 @@ All functional and non-functional requirements have been implemented as of March
 - Real-time updates: Subscriptions and Socket.IO events.
 - External provider integration: Registrations bootstrapped.
 - Map experience: Leaflet with fallbacks.
+
+### UI Enhancements (March 8, 2026)
+- Adopted Bootstrap 5 for responsive design and modern components.
+- Integrated Font Awesome icons for improved navigation and actions.
+- Implemented Roboto font for better readability.
+- Added custom color scheme (green #28a745 for primary, orange #fd7e14 for accents).
+- Redesigned navigation with collapsible navbar and logo.
+- Converted lists to card-based layouts for better visual hierarchy.
+- Enhanced forms with Bootstrap styling and improved UX.
+- Replaced alert() notifications with Toastify.js toasts.
+- Added optional dark theme toggle.
+- Rendered Mermaid diagrams for system architecture visualization.

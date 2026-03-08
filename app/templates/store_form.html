@@ -3,34 +3,80 @@
 {% block title %}{% if store %}Edit{% else %}New{% endif %} Store - FIWARE Supermarkets{% endblock %}
 
 {% block content %}
-<h1>{% if store %}Edit{% else %}New{% endif %} Store</h1>
-<form method="post" novalidate>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="{{ store.name if store else '' }}" required><br>
-    <label for="streetAddress">Street Address:</label>
-    <input type="text" id="streetAddress" name="streetAddress" value="{{ store.address.streetAddress if store else '' }}" required><br>
-    <label for="addressRegion">Region:</label>
-    <input type="text" id="addressRegion" name="addressRegion" value="{{ store.address.addressRegion if store else '' }}" required><br>
-    <label for="addressLocality">Locality:</label>
-    <input type="text" id="addressLocality" name="addressLocality" value="{{ store.address.addressLocality if store else '' }}" required><br>
-    <label for="postalCode">Postal Code:</label>
-    <input type="text" id="postalCode" name="postalCode" value="{{ store.address.postalCode if store else '' }}" required><br>
-    <label for="longitude">Longitude:</label>
-    <input type="number" id="longitude" name="longitude" step="any" value="{{ store.location.coordinates[0] if store else '' }}" required><br>
-    <label for="latitude">Latitude:</label>
-    <input type="number" id="latitude" name="latitude" step="any" value="{{ store.location.coordinates[1] if store else '' }}" required><br>
-    <label for="capacity">Capacity:</label>
-    <input type="number" id="capacity" name="capacity" value="{{ store.capacity if store else '' }}" required><br>
-    <label for="url">URL:</label>
-    <input type="url" id="url" name="url" value="{{ store.url if store else '' }}"><br>
-    <label for="telephone">Telephone:</label>
-    <input type="tel" id="telephone" name="telephone" value="{{ store.telephone if store else '' }}"><br>
-    <label for="countryCode">Country Code:</label>
-    <input type="text" id="countryCode" name="countryCode" value="{{ store.countryCode if store else 'DE' }}"><br>
-    <label for="description">Description:</label>
-    <textarea id="description" name="description">{{ store.description if store else '' }}</textarea><br>
-    <label for="image">Image URL:</label>
-    <input type="url" id="image" name="image" value="{{ store.image if store else '' }}"><br>
-    <button type="submit">{% if store %}Update{% else %}Create{% endif %}</button>
-</form>
+<h1 class="mb-4"><i class="fas fa-{% if store %}edit{% else %}plus{% endif %}"></i> {% if store %}Edit{% else %}New{% endif %} Store</h1>
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" novalidate>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ store.name if store else '' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="capacity" class="form-label">Capacity</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" value="{{ store.capacity if store else '' }}" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="streetAddress" class="form-label">Street Address</label>
+                        <input type="text" class="form-control" id="streetAddress" name="streetAddress" value="{{ store.address.streetAddress if store else '' }}" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="addressLocality" class="form-label">Locality</label>
+                            <input type="text" class="form-control" id="addressLocality" name="addressLocality" value="{{ store.address.addressLocality if store else '' }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="addressRegion" class="form-label">Region</label>
+                            <input type="text" class="form-control" id="addressRegion" name="addressRegion" value="{{ store.address.addressRegion if store else '' }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="postalCode" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="postalCode" name="postalCode" value="{{ store.address.postalCode if store else '' }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="number" class="form-control" id="longitude" name="longitude" step="any" value="{{ store.location.coordinates[0] if store else '' }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="number" class="form-control" id="latitude" name="latitude" step="any" value="{{ store.location.coordinates[1] if store else '' }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telephone" class="form-label">Telephone</label>
+                            <input type="tel" class="form-control" id="telephone" name="telephone" value="{{ store.telephone if store else '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="countryCode" class="form-label">Country Code</label>
+                            <input type="text" class="form-control" id="countryCode" name="countryCode" value="{{ store.countryCode if store else 'DE' }}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="url" class="form-label">URL</label>
+                        <input type="url" class="form-control" id="url" name="url" value="{{ store.url if store else '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image URL</label>
+                        <input type="url" class="form-control" id="image" name="image" value="{{ store.image if store else '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ store.description if store else '' }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> {% if store %}Update{% else %}Create{% endif %} Store
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

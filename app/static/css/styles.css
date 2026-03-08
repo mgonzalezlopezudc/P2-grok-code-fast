@@ -1,67 +1,51 @@
 /* app/static/css/styles.css */
 
+:root {
+    --primary: #28a745;
+    --secondary: #fd7e14;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    font-family: 'Roboto', sans-serif;
 }
 
-header {
-    background: #f4f4f4;
-    padding: 1em;
+/* Custom styles for KPIs */
+.kpi-card {
+    transition: transform 0.2s;
 }
 
-nav {
-    display: flex;
-    gap: 1em;
-    align-items: center;
+.kpi-card:hover {
+    transform: translateY(-2px);
 }
 
-main {
-    padding: 1em;
+/* Form improvements */
+.form-floating > label {
+    color: var(--bs-body-color);
 }
 
-.kpis {
-    display: flex;
-    gap: 1em;
+/* Button customizations */
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
 
-.kpi {
-    border: 1px solid #ccc;
-    padding: 1em;
-    background: #fff;
+.btn-primary:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }
 
-form {
-    max-width: 600px;
+.btn-secondary {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
 }
 
-label {
-    display: block;
-    margin-top: 1em;
+.btn-secondary:hover {
+    background-color: #e8680d;
+    border-color: #d85a0a;
 }
 
-input, select, textarea, button {
-    width: 100%;
-    padding: 0.5em;
-    margin-top: 0.5em;
-}
-
-button {
-    background: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
-@media (max-width: 600px) {
-    nav {
-        flex-direction: column;
-    }
+/* Responsive adjustments */
+@media (max-width: 768px) {
     .kpis {
         flex-direction: column;
     }

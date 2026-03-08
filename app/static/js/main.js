@@ -8,12 +8,11 @@ socket.on('price_change', (data) => {
         const priceElements = document.querySelectorAll(`.js-price[data-product="${item.id}"]`);
         priceElements.forEach(el => el.textContent = `$${item.price}`);
     });
-    showToast('Price updated', 'info');
+    showToast('Price updated', 'success');
 });
 
 socket.on('low_stock_001', (data) => {
     showToast('Low stock in Store 001', 'warning');
-    // Append to store panel if on store page
 });
 
 socket.on('low_stock_002', (data) => {
@@ -29,6 +28,17 @@ socket.on('low_stock_004', (data) => {
 });
 
 function showToast(message, type) {
-    // Simple toast
-    alert(message); // Placeholder, replace with proper toast
+    const colors = {
+        success: '#28a745',
+        warning: '#ffc107',
+        error: '#dc3545',
+        info: '#17a2b8'
+    };
+    Toastify({
+        text: message,
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: colors[type] || colors.info,
+    }).showToast();
 }

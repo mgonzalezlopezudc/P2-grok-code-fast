@@ -46,6 +46,13 @@
 - Notify endpoints `/subscription/low-stock-store001..004`.
 
 ## Frontend behavior
+- UI framework: Bootstrap 5 for responsive design and components.
+- Icons: Font Awesome for navigation and actions.
+- Typography: Roboto font loaded from Google Fonts.
+- Color scheme: Custom CSS variables (green primary, orange secondary).
+- Notifications: Toastify.js for non-blocking toasts instead of browser alerts.
+- Dark theme: Optional toggle using Bootstrap's data-bs-theme.
+- Diagrams: Mermaid.js for rendering system architecture diagrams.
 - Socket.IO client from CDN (`4.8.1`) is loaded in `app/templates/base.html`.
 - Events handled by `main.js`:
 - `price_change` updates DOM prices (`.js-price`) and shows info toast.
