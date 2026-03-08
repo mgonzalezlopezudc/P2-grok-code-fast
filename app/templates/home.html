@@ -4,5 +4,18 @@
 
 {% block content %}
 <h1>Home</h1>
-<p>Welcome to FIWARE Supermarkets management system.</p>
+<div class="kpis">
+    <div class="kpi">Stores: {{ stores }}</div>
+    <div class="kpi">Products: {{ products }}</div>
+    <div class="kpi">Employees: {{ employees }}</div>
+</div>
+<!-- Mermaid diagram placeholder -->
+<div class="mermaid">
+    graph TD;
+        Store --> Shelf;
+        Store --> Employee;
+        Product --> InventoryItem;
+        Shelf --> InventoryItem;
+        Store --> InventoryItem;
+</div>
 {% endblock %}

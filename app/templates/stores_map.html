@@ -4,5 +4,19 @@
 
 {% block content %}
 <h1>Stores Map</h1>
-<div id="map"></div>
+<div id="map" style="height: 400px;"></div>
+<script>
+    // Leaflet map
+    const map = L.map('map').setView([52.52, 13.405], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const stores = {{ stores | tojson }};
+    stores.forEach(store => {
+        const coords = store.location.coordinates;
+        L.marker([coords[1], coords[0]]).addTo(map)
+            .bindPopup(`<b>${store.name}</b><br>${store.address.streetAddress}`);
+    });
+</script>
 {% endblock %}

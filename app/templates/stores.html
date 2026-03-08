@@ -4,5 +4,10 @@
 
 {% block content %}
 <h1>Stores</h1>
-<p>Manage stores here.</p>
+<a href="{{ url_for('main.new_store') }}">New Store</a>
+<ul>
+{% for store in stores %}
+    <li>{{ store.name }} - {{ store.address.streetAddress }}, {{ store.address.addressLocality }}</li>
+{% endfor %}
+</ul>
 {% endblock %}
