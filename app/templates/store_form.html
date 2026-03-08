@@ -1,26 +1,36 @@
 {% extends "base.html" %}
 
-{% block title %}New Store - FIWARE Supermarkets{% endblock %}
+{% block title %}{% if store %}Edit{% else %}New{% endif %} Store - FIWARE Supermarkets{% endblock %}
 
 {% block content %}
-<h1>New Store</h1>
+<h1>{% if store %}Edit{% else %}New{% endif %} Store</h1>
 <form method="post" novalidate>
     <label for="name">Name:</label>
-    <input type="text" id="name" name="name" required><br>
+    <input type="text" id="name" name="name" value="{{ store.name if store else '' }}" required><br>
     <label for="streetAddress">Street Address:</label>
-    <input type="text" id="streetAddress" name="streetAddress" required><br>
+    <input type="text" id="streetAddress" name="streetAddress" value="{{ store.address.streetAddress if store else '' }}" required><br>
     <label for="addressRegion">Region:</label>
-    <input type="text" id="addressRegion" name="addressRegion" required><br>
+    <input type="text" id="addressRegion" name="addressRegion" value="{{ store.address.addressRegion if store else '' }}" required><br>
     <label for="addressLocality">Locality:</label>
-    <input type="text" id="addressLocality" name="addressLocality" required><br>
+    <input type="text" id="addressLocality" name="addressLocality" value="{{ store.address.addressLocality if store else '' }}" required><br>
     <label for="postalCode">Postal Code:</label>
-    <input type="text" id="postalCode" name="postalCode" required><br>
+    <input type="text" id="postalCode" name="postalCode" value="{{ store.address.postalCode if store else '' }}" required><br>
     <label for="longitude">Longitude:</label>
-    <input type="number" id="longitude" name="longitude" step="any" required><br>
+    <input type="number" id="longitude" name="longitude" step="any" value="{{ store.location.coordinates[0] if store else '' }}" required><br>
     <label for="latitude">Latitude:</label>
-    <input type="number" id="latitude" name="latitude" step="any" required><br>
+    <input type="number" id="latitude" name="latitude" step="any" value="{{ store.location.coordinates[1] if store else '' }}" required><br>
     <label for="capacity">Capacity:</label>
-    <input type="number" id="capacity" name="capacity" required><br>
-    <button type="submit">Create</button>
+    <input type="number" id="capacity" name="capacity" value="{{ store.capacity if store else '' }}" required><br>
+    <label for="url">URL:</label>
+    <input type="url" id="url" name="url" value="{{ store.url if store else '' }}"><br>
+    <label for="telephone">Telephone:</label>
+    <input type="tel" id="telephone" name="telephone" value="{{ store.telephone if store else '' }}"><br>
+    <label for="countryCode">Country Code:</label>
+    <input type="text" id="countryCode" name="countryCode" value="{{ store.countryCode if store else 'DE' }}"><br>
+    <label for="description">Description:</label>
+    <textarea id="description" name="description">{{ store.description if store else '' }}</textarea><br>
+    <label for="image">Image URL:</label>
+    <input type="url" id="image" name="image" value="{{ store.image if store else '' }}"><br>
+    <button type="submit">{% if store %}Update{% else %}Create{% endif %}</button>
 </form>
 {% endblock %}

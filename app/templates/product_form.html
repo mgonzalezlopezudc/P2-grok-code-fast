@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{% if product %}Edit{% else %}New{% endif %} Product - FIWARE Supermarkets{% endblock %}
+
+{% block content %}
+<h1>{% if product %}Edit{% else %}New{% endif %} Product</h1>
+<form method="post" novalidate>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" value="{{ product.name if product else '' }}" required><br>
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="0.01" value="{{ product.price if product else '' }}" required><br>
+    <label for="size">Size:</label>
+    <select id="size" name="size" required>
+        <option value="XS" {% if product and product.size == 'XS' %}selected{% endif %}>XS</option>
+        <option value="S" {% if product and product.size == 'S' %}selected{% endif %}>S</option>
+        <option value="M" {% if product and product.size == 'M' %}selected{% endif %}>M</option>
+        <option value="L" {% if product and product.size == 'L' %}selected{% endif %}>L</option>
+        <option value="XL" {% if product and product.size == 'XL' %}selected{% endif %}>XL</option>
+    </select><br>
+    <label for="color">Color (#RRGGBB):</label>
+    <input type="text" id="color" name="color" pattern="#[0-9A-Fa-f]{6}" value="{{ product.color if product else '' }}" required><br>
+    <label for="image">Image URL:</label>
+    <input type="url" id="image" name="image" value="{{ product.image if product else '' }}"><br>
+    <button type="submit">{% if product %}Update{% else %}Create{% endif %}</button>
+</form>
+{% endblock %}

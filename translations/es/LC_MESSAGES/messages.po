@@ -1,0 +1,35 @@
+# Spanish translations
+msgid ""
+msgstr ""
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Home"
+msgstr "Inicio"
+
+msgid "Products"
+msgstr "Productos"
+
+msgid "Stores"
+msgstr "Tiendas"
+
+msgid "Employees"
+msgstr "Empleados"
+
+msgid "Stores Map"
+msgstr "Mapa de Tiendas"
+
+msgid "New Store"
+msgstr "Nueva Tienda"
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "Update"
+msgstr "Actualizar"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Delete"
+msgstr "Eliminar"

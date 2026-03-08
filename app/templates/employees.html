@@ -4,5 +4,15 @@
 
 {% block content %}
 <h1>Employees</h1>
-<p>Manage employees here.</p>
+<a href="{{ url_for('main.new_employee') }}">New Employee</a>
+<ul>
+{% for employee in employees %}
+    <li>{{ employee.name }} - {{ employee.role }}
+        <a href="{{ url_for('main.edit_employee', id=employee.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('main.delete_employee', id=employee.id) }}" style="display:inline;">
+            <button type="submit" onclick="return confirm('Delete?')">Delete</button>
+        </form>
+    </li>
+{% endfor %}
+</ul>
 {% endblock %}

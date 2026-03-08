@@ -7,7 +7,12 @@
 <a href="{{ url_for('main.new_store') }}">New Store</a>
 <ul>
 {% for store in stores %}
-    <li>{{ store.name }} - {{ store.address.streetAddress }}, {{ store.address.addressLocality }}</li>
+    <li><a href="{{ url_for('main.store_detail', id=store.id) }}">{{ store.name }}</a> - {{ store.address.streetAddress }}, {{ store.address.addressLocality }}
+        <a href="{{ url_for('main.edit_store', id=store.id) }}">Edit</a>
+        <form method="post" action="{{ url_for('main.delete_store', id=store.id) }}" style="display:inline;">
+            <button type="submit" onclick="return confirm('Delete?')">Delete</button>
+        </form>
+    </li>
 {% endfor %}
 </ul>
 {% endblock %}

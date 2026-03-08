@@ -19,6 +19,20 @@
                 <option value="es" {% if current_locale == 'es' %}selected{% endif %}>Español</option>
                 <option value="en" {% if current_locale == 'en' %}selected{% endif %}>English</option>
             </select>
+            <script>
+                document.getElementById('lang-selector').addEventListener('change', function() {
+                    const form = document.createElement('form');
+                    form.method = 'post';
+                    form.action = '/set-language';
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = 'lang';
+                    input.value = this.value;
+                    form.appendChild(input);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
+            </script>
         </nav>
     </header>
     <main>

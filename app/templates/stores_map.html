@@ -5,18 +5,39 @@
 {% block content %}
 <h1>Stores Map</h1>
 <div id="map" style="height: 400px;"></div>
-<script>
-    // Leaflet map
-    const map = L.map('map').setView([52.52, 13.405], 10);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
+<noscript>Map requires JavaScript</noscript>
 
-    const stores = {{ stores | tojson }};
-    stores.forEach(store => {
-        const coords = store.location.coordinates;
-        L.marker([coords[1], coords[0]]).addTo(map)
-            .bindPopup(`<b>${store.name}</b><br>${store.address.streetAddress}`);
-    });
+<script>
+    // Leaflet map with fallback
+    function loadLeaflet() {
+        if (typeof L !== 'undefined') {
+            const map = L.map('map').setView([52.52, 13.405], 10);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            const stores = {{ stores | tojson }};
+            stores.forEach(store => {
+                const coords = store.location.coordinates;
+                L.marker([coords[1], coords[0]]).addTo(map)
+                    .bindPopup(`<b>${store.name}</b><br>${store.address.streetAddress}`);
+            });
+        } else {
+            document.getElementById('map').innerHTML = '<p>Map cannot be loaded. Please check your internet connection.</p>';
+        }
+    }
+
+    // Load Leaflet
+    if (typeof L === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.onload = loadLeaflet;
+        script.onerror = () => {
+            document.getElementById('map').innerHTML = '<p>Map cannot be loaded. Please check your internet connection.</p>';
+        };
+        document.head.appendChild(script);
+    } else {
+        loadLeaflet();
+    }
 </script>
 {% endblock %}

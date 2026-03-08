@@ -1,3 +1,68 @@
 /* app/static/css/styles.css */
 
-/* Placeholder for styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #f4f4f4;
+    padding: 1em;
+}
+
+nav {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+
+main {
+    padding: 1em;
+}
+
+.kpis {
+    display: flex;
+    gap: 1em;
+}
+
+.kpi {
+    border: 1px solid #ccc;
+    padding: 1em;
+    background: #fff;
+}
+
+form {
+    max-width: 600px;
+}
+
+label {
+    display: block;
+    margin-top: 1em;
+}
+
+input, select, textarea, button {
+    width: 100%;
+    padding: 0.5em;
+    margin-top: 0.5em;
+}
+
+button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+@media (max-width: 600px) {
+    nav {
+        flex-direction: column;
+    }
+    .kpis {
+        flex-direction: column;
+    }
+}

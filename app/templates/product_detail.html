@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - FIWARE Supermarkets{% endblock %}
+
+{% block content %}
+<h1>{{ product.name }}</h1>
+<p>Price: ${{ product.price }}</p>
+<p>Size: {{ product.size }}</p>
+<p>Color: {{ product.color }}</p>
+
+<h2>Inventory by Store</h2>
+{% for store_id, invs in inventory_by_store.items() %}
+    <h3>{{ stores | selectattr('id', 'equalto', store_id) | map(attribute='name') | first }}</h3>
+    <ul>
+    {% for inv in invs %}
+        <li>Shelf: {{ shelves | selectattr('id', 'equalto', inv.refShelf) | map(attribute='name') | first }} - Stock: {{ inv.stockCount }}, Shelf: {{ inv.shelfCount }}</li>
+    {% endfor %}
+    </ul>
+    <form method="post" action="{{ url_for('main.add_inventory', product_id=product.id, store_id=store_id) }}">
+        <label>Shelf:</label>
+        <select name="shelf_id" required>
+            <option value="">Select shelf</option>
+        </select>
+        <label>Initial Stock:</label>
+        <input type="number" name="stock_count" required>
+        <button type="submit">Add Inventory</button>
+    </form>
+{% endfor %}
+
+<script>
+    // Load available shelves for each store
+    document.querySelectorAll('select[name="shelf_id"]').forEach(select => {
+        const storeId = select.closest('form').action.split('store_id=')[1];
+        fetch(`/api/stores/${storeId}/available-shelves`)
+            .then(r => r.json())
+            .then(shelves => {
+                shelves.forEach(shelf => {
+                    const option = document.createElement('option');
+                    option.value = shelf.id;
+                    option.text = shelf.name;
+                    select.appendChild(option);
+                });
+            });
+    });
+</script>
+{% endblock %}

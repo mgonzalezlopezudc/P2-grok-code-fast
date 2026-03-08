@@ -81,7 +81,32 @@ def serialize_store(data):
         "image": {"type": "Text", "value": data.get('image', '')}
     }
 
-# Similar for other entities, but placeholder for now
+def serialize_product(data):
+    return {
+        "id": data.get('id') or generate_entity_id('Product'),
+        "type": "Product",
+        "name": {"type": "Text", "value": data['name']},
+        "price": {"type": "Number", "value": float(data['price'])},
+        "size": {"type": "Text", "value": data['size']},
+        "color": {"type": "Text", "value": data['color']},
+        "image": {"type": "Text", "value": data.get('image', '')}
+    }
+
+def serialize_employee(data):
+    return {
+        "id": data.get('id') or generate_entity_id('Employee'),
+        "type": "Employee",
+        "name": {"type": "Text", "value": data['name']},
+        "image": {"type": "Text", "value": data.get('image', '')},
+        "salary": {"type": "Number", "value": float(data['salary'])},
+        "role": {"type": "Text", "value": data['role']},
+        "refStore": {"type": "Relationship", "value": data['refStore']},
+        "email": {"type": "Text", "value": data['email']},
+        "dateOfContract": {"type": "Date", "value": data['dateOfContract']},
+        "skills": {"type": "StructuredValue", "value": data.get('skills', [])},
+        "username": {"type": "Text", "value": data['username']},
+        "password": {"type": "Text", "value": data['password']}
+    }
 
 def bootstrap_registrations(client):
     # Ensure registrations for stores 001-004

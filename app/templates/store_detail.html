@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{ store.name }} - FIWARE Supermarkets{% endblock %}
+
+{% block content %}
+<h1>{{ store.name }}</h1>
+<p>{{ store.address.streetAddress }}, {{ store.address.addressLocality }}</p>
+<p>Capacity: {{ store.capacity }}</p>
+
+<h2>Inventory by Shelf</h2>
+{% for shelf_id, invs in inventory_by_shelf.items() %}
+    <h3>{{ shelves | selectattr('id', 'equalto', shelf_id) | map(attribute='name') | first }} (Max: {{ shelves | selectattr('id', 'equalto', shelf_id) | map(attribute='maxCapacity') | first }})</h3>
+    <ul>
+    {% for inv in invs %}
+        <li>{{ products | selectattr('id', 'equalto', inv.refProduct) | map(attribute='name') | first }} - Stock: {{ inv.stockCount }}, Shelf: {{ inv.shelfCount }}
+            {% if inv.shelfCount > 0 %}
+            <form method="post" action="{{ url_for('main.buy_inventory', id=inv.id) }}" style="display:inline;">
+                <button type="submit">Buy</button>
+            </form>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+
+<!-- Display provider data if available -->
+{% if store.temperature %}
+<p>Temperature: {{ store.temperature }}</p>
+{% endif %}
+{% if store.relativeHumidity %}
+<p>Humidity: {{ store.relativeHumidity }}</p>
+{% endif %}
+{% if store.tweets %}
+<p>Tweets: {{ store.tweets }}</p>
+{% endif %}
+{% endblock %}
