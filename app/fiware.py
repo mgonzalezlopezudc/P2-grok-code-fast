@@ -14,14 +14,14 @@ class OrionClient:
     def list_entities(self, entity_type, options='keyValues'):
         url = f"{self.base_url}/v2/entities"
         params = {'type': entity_type, 'options': options}
-        response = requests.get(url, params=params, headers=self._get_headers())
+        response = requests.get(url, params=params)
         response.raise_for_status()
         return response.json()
 
     def get_entity(self, entity_id, options='keyValues'):
         url = f"{self.base_url}/v2/entities/{entity_id}"
         params = {'options': options}
-        response = requests.get(url, params=params, headers=self._get_headers())
+        response = requests.get(url, params=params)
         response.raise_for_status()
         return response.json()
 

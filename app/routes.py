@@ -1,8 +1,7 @@
 # app/routes.py
 
-from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from app import orion
-from .fiware import serialize_store, generate_entity_id
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify, current_app
+from .fiware import serialize_store, serialize_product, serialize_employee, generate_entity_id
 
 main_bp = Blueprint('main', __name__)
 
@@ -10,9 +9,9 @@ main_bp = Blueprint('main', __name__)
 def home():
     # Get KPI counts
     try:
-        stores = len(orion.list_entities('Store'))
-        products = len(orion.list_entities('Product'))
-        employees = len(orion.list_entities('Employee'))
+        stores = len(current_app.orion_client.list_entities('Store'))
+        products = len(current_app.orion_client.list_entities('Product'))
+        employees = len(current_app.orion_client.list_entities('Employee'))
     except:
         stores = products = employees = 0
     return render_template('home.html', stores=stores, products=products, employees=employees)
@@ -20,10 +19,23 @@ def home():
 @main_bp.route('/products')
 def products():
     try:
-        products = orion.list_entities('Product')
+        products = current_app.orion_client.list_entities('Product')
     except:
         products = []
     return render_template('products.html', products=products)
+
+@main_bp.route('/products/new', methods=['GET', 'POST'])
+def new_product():
+    if request.method == 'POST':
+        data = request.form.to_dict()
+        entity = serialize_product(data)
+        try:
+            current_app.orion_client.upsert_entity(entity)
+            flash('Product created successfully')
+            return redirect(url_for('main.products'))
+        except Exception as e:
+            flash(f'Error: {e}')
+    return render_template('product_form.html', product=None)
 
 @main_bp.route('/products/<id>/edit', methods=['GET', 'POST'])
 def edit_product(id):
@@ -32,13 +44,13 @@ def edit_product(id):
         data['id'] = id
         entity = serialize_product(data)
         try:
-            orion.upsert_entity(entity)
+            current_app.orion_client.upsert_entity(entity)
             flash('Product updated successfully')
             return redirect(url_for('main.products'))
         except Exception as e:
             flash(f'Error: {e}')
     try:
-        product = orion.get_entity(id)
+        product = current_app.orion_client.get_entity(id)
     except:
         flash('Product not found')
         return redirect(url_for('main.products'))
@@ -47,7 +59,7 @@ def edit_product(id):
 @main_bp.route('/products/<id>/delete', methods=['POST'])
 def delete_product(id):
     try:
-        orion.delete_entity(id)
+        current_app.orion_client.delete_entity(id)
         flash('Product deleted successfully')
     except Exception as e:
         flash(f'Error: {e}')
@@ -56,10 +68,10 @@ def delete_product(id):
 @main_bp.route('/products/<id>')
 def product_detail(id):
     try:
-        product = orion.get_entity(id)
-        inventory = orion.list_entities('InventoryItem')
-        stores = orion.list_entities('Store')
-        shelves = orion.list_entities('Shelf')
+        product = current_app.orion_client.get_entity(id)
+        inventory = current_app.orion_client.list_entities('InventoryItem')
+        stores = current_app.orion_client.list_entities('Store')
+        shelves = current_app.orion_client.list_entities('Shelf')
         # Group inventory by store
         inventory_by_store = {}
         for inv in inventory:
@@ -88,11 +100,52 @@ def add_inventory(product_id, store_id):
         "shelfCount": {"type": "Integer", "value": stock_count}
     }
     try:
-        orion.upsert_entity(entity)
+        current_app.orion_client.upsert_entity(entity)
         flash('Inventory added successfully')
     except Exception as e:
         flash(f'Error: {e}')
     return redirect(url_for('main.product_detail', id=product_id))
+
+@main_bp.route('/stores')
+def stores():
+    try:
+        stores = current_app.orion_client.list_entities('Store')
+    except:
+        stores = []
+    return render_template('stores.html', stores=stores)
+
+@main_bp.route('/stores/<id>')
+def store_detail(id):
+    try:
+        store = current_app.orion_client.get_entity(id)
+        inventory = current_app.orion_client.list_entities('InventoryItem')
+        products = current_app.orion_client.list_entities('Product')
+        shelves = current_app.orion_client.list_entities('Shelf')
+        # Group inventory by shelf
+        inventory_by_shelf = {}
+        for inv in inventory:
+            if inv.get('refStore') == id:
+                shelf_id = inv.get('refShelf')
+                if shelf_id not in inventory_by_shelf:
+                    inventory_by_shelf[shelf_id] = []
+                inventory_by_shelf[shelf_id].append(inv)
+        return render_template('store_detail.html', store=store, inventory_by_shelf=inventory_by_shelf, products=products, shelves=shelves)
+    except:
+        flash('Store not found')
+        return redirect(url_for('main.stores'))
+
+@main_bp.route('/stores/new', methods=['GET', 'POST'])
+def new_store():
+    if request.method == 'POST':
+        data = request.form.to_dict()
+        entity = serialize_store(data)
+        try:
+            current_app.orion_client.upsert_entity(entity)
+            flash('Store created successfully')
+            return redirect(url_for('main.stores'))
+        except Exception as e:
+            flash(f'Error: {e}')
+    return render_template('store_form.html', store=None)
 
 @main_bp.route('/stores/<id>/edit', methods=['GET', 'POST'])
 def edit_store(id):
@@ -101,13 +154,13 @@ def edit_store(id):
         data['id'] = id
         entity = serialize_store(data)
         try:
-            orion.upsert_entity(entity)
+            current_app.orion_client.upsert_entity(entity)
             flash('Store updated successfully')
             return redirect(url_for('main.stores'))
         except Exception as e:
             flash(f'Error: {e}')
     try:
-        store = orion.get_entity(id)
+        store = current_app.orion_client.get_entity(id)
     except:
         flash('Store not found')
         return redirect(url_for('main.stores'))
@@ -116,7 +169,7 @@ def edit_store(id):
 @main_bp.route('/stores/<id>/delete', methods=['POST'])
 def delete_store(id):
     try:
-        orion.delete_entity(id)
+        current_app.orion_client.delete_entity(id)
         flash('Store deleted successfully')
     except Exception as e:
         flash(f'Error: {e}')
@@ -125,7 +178,7 @@ def delete_store(id):
 @main_bp.route('/employees')
 def employees():
     try:
-        employees = orion.list_entities('Employee')
+        employees = current_app.orion_client.list_entities('Employee')
     except:
         employees = []
     return render_template('employees.html', employees=employees)
@@ -136,12 +189,12 @@ def new_employee():
         data = request.form.to_dict()
         entity = serialize_employee(data)
         try:
-            orion.upsert_entity(entity)
+            current_app.orion_client.upsert_entity(entity)
             flash('Employee created successfully')
             return redirect(url_for('main.employees'))
         except Exception as e:
             flash(f'Error: {e}')
-    stores = orion.list_entities('Store')
+    stores = current_app.orion_client.list_entities('Store')
     return render_template('employee_form.html', employee=None, stores=stores)
 
 @main_bp.route('/employees/<id>/edit', methods=['GET', 'POST'])
@@ -151,23 +204,23 @@ def edit_employee(id):
         data['id'] = id
         entity = serialize_employee(data)
         try:
-            orion.upsert_entity(entity)
+            current_app.orion_client.upsert_entity(entity)
             flash('Employee updated successfully')
             return redirect(url_for('main.employees'))
         except Exception as e:
             flash(f'Error: {e}')
     try:
-        employee = orion.get_entity(id)
+        employee = current_app.orion_client.get_entity(id)
     except:
         flash('Employee not found')
         return redirect(url_for('main.employees'))
-    stores = orion.list_entities('Store')
+    stores = current_app.orion_client.list_entities('Store')
     return render_template('employee_form.html', employee=employee, stores=stores)
 
 @main_bp.route('/employees/<id>/delete', methods=['POST'])
 def delete_employee(id):
     try:
-        orion.delete_entity(id)
+        current_app.orion_client.delete_entity(id)
         flash('Employee deleted successfully')
     except Exception as e:
         flash(f'Error: {e}')
@@ -176,7 +229,7 @@ def delete_employee(id):
 @main_bp.route('/stores-map')
 def stores_map():
     try:
-        stores = orion.list_entities('Store')
+        stores = current_app.orion_client.list_entities('Store')
     except:
         stores = []
     return render_template('stores_map.html', stores=stores)
@@ -185,8 +238,8 @@ def stores_map():
 @main_bp.route('/api/stores/<store_id>/available-shelves')
 def available_shelves(store_id):
     try:
-        shelves = orion.list_entities('Shelf')
-        inventory = orion.list_entities('InventoryItem')
+        shelves = current_app.orion_client.list_entities('Shelf')
+        inventory = current_app.orion_client.list_entities('InventoryItem')
         # Available shelves: those in store with maxCapacity > current inventory
         available = []
         for shelf in shelves:
@@ -202,8 +255,8 @@ def available_shelves(store_id):
 @main_bp.route('/api/shelves/<shelf_id>/available-products')
 def available_products(shelf_id):
     try:
-        products = orion.list_entities('Product')
-        inventory = orion.list_entities('InventoryItem')
+        products = current_app.orion_client.list_entities('Product')
+        inventory = current_app.orion_client.list_entities('InventoryItem')
         # Available products: those not already on this shelf
         assigned_products = {inv['refProduct'] for inv in inventory if inv.get('refShelf') == shelf_id}
         available = [p for p in products if p['id'] not in assigned_products]
@@ -215,7 +268,7 @@ def available_products(shelf_id):
 @main_bp.route('/inventory/<id>/buy', methods=['POST'])
 def buy_inventory(id):
     try:
-        inv = orion.get_entity(id)
+        inv = current_app.orion_client.get_entity(id)
         if inv['shelfCount'] <= 0:
             flash('Out of stock')
             return redirect(request.referrer or url_for('main.home'))
@@ -224,7 +277,7 @@ def buy_inventory(id):
             "shelfCount": {"type": "Integer", "value": inv['shelfCount'] - 1},
             "stockCount": {"type": "Integer", "value": inv['stockCount'] - 1}
         }
-        orion.update_entity_attrs(id, attrs)
+        current_app.orion_client.update_entity_attrs(id, attrs)
         flash('Purchase successful')
     except Exception as e:
         flash(f'Error: {e}')

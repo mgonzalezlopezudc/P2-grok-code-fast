@@ -424,4 +424,36 @@ curl -s -o /dev/null -X POST \
   ]
 }'
 
+#
+# Create a series of Employee Entities.
+#
+curl -s -o /dev/null -X POST \
+  'http://localhost:1026/v2/op/update' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "actionType":"APPEND",
+  "entities":[
+    {
+      "id":"urn:ngsi-ld:Employee:001", "type":"Employee",
+      "name":{"type":"Text", "value":"John Doe"},
+      "image":{"type":"Text", "value":"https://via.placeholder.com/150/0000FF"}
+    },
+    {
+      "id":"urn:ngsi-ld:Employee:002", "type":"Employee",
+      "name":{"type":"Text", "value":"Jane Smith"},
+      "image":{"type":"Text", "value":"https://via.placeholder.com/150/FF0000"}
+    },
+    {
+      "id":"urn:ngsi-ld:Employee:003", "type":"Employee",
+      "name":{"type":"Text", "value":"Bob Johnson"},
+      "image":{"type":"Text", "value":"https://via.placeholder.com/150/00FF00"}
+    },
+    {
+      "id":"urn:ngsi-ld:Employee:004", "type":"Employee",
+      "name":{"type":"Text", "value":"Alice Williams"},
+      "image":{"type":"Text", "value":"https://via.placeholder.com/150/FFFF00"}
+    }
+  ]
+}'
+
 echo -e " \033[1;32mdone\033[0m"
