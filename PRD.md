@@ -74,3 +74,16 @@ FIWARE Supermarkets is a Flask web UI over Orion NGSIv2 to manage supermarket en
 - Internationalization runtime uses `Flask-Babel` catalogs under `translations/`.
 - Infrastructure lifecycle uses repository scripts (`./services start`, `./services stop`).
 - Seed script (`import-data`) initializes baseline entities for all managed types, with provider-managed store attrs supplied by context providers.
+
+## Implementation Status
+
+All functional and non-functional requirements have been implemented as of March 8, 2026.
+
+- Entity coverage: Full CRUD for Store, Product, Employee; embedded for Shelf and InventoryItem.
+- Navigation and views: All views implemented with KPI, details, map.
+- Multilanguage support: Spanish and English with switching.
+- Business operations: Purchase operation implemented with stock decrement.
+- Dynamic validation and helpers: HTML constraints and JS validation.
+- Real-time updates: Subscriptions and Socket.IO events.
+- External provider integration: Registrations bootstrapped.
+- Map experience: Leaflet with fallbacks.

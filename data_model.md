@@ -98,3 +98,16 @@ UI usage:
 - Seeds baseline `Store`, `Shelf`, `Product`, `InventoryItem`, and `Employee` entities.
 - Includes 4 employees (one per store).
 - Store external attrs (`temperature`, `relativeHumidity`, `tweets`) are not seeded and are expected from context providers.
+
+## Implementation Notes
+
+The data model has been implemented in Orion NGSIv2.
+
+- Localization: As specified, entity data not translated, UI localized.
+- Naming and IDs: URN prefixes used.
+- Entities: All attributes as specified, with provider-managed attrs integrated.
+- Derived constraints: Purchase operation updates stock, rejects when shelfCount <=0.
+- Dynamic assignment: APIs implemented to prevent duplicates.
+- Real-time event payload: Normalized to flat objects, events emitted.
+- Provider registration: 8 registrations maintained.
+- Seed dataset: import-data script seeds all entities.

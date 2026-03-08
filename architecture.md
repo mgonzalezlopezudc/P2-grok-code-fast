@@ -92,3 +92,29 @@
 - App is launched with `python run.py` and binds `0.0.0.0:5000`.
 - Default Socket.IO async mode is `threading`.
 - If `SOCKETIO_ASYNC_MODE=eventlet` is set but app runs via Flask CLI, mode is auto-adjusted to `threading`.
+
+## Implementation Details
+
+The application has been fully implemented with the following components:
+
+- run.py: Entry point.
+- app/__init__.py: App factory with extensions.
+- app/config.py: Configuration.
+- app/fiware.py: Orion client and bootstrap.
+- app/routes.py: All routes.
+- Templates and static files as listed.
+- Translations for es and en.
+- docker-compose.yml for services.
+- services and import-data scripts.
+
+High-level flow implemented as described.
+
+Orion integration: All operations, registrations, subscriptions bootstrapped.
+
+Frontend: Socket.IO, Leaflet with fallbacks.
+
+I18n: Flask-Babel with locale resolution.
+
+HTTP surface: All endpoints implemented.
+
+Deployment: Scripts ready.
