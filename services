@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# services script for managing docker-compose infrastructure
+
+set -e
+
+COMPOSE_FILE="docker-compose.yml"
+
+case "$1" in
+    start)
+        echo "Starting FIWARE services..."
+        docker-compose -f $COMPOSE_FILE up -d
+        echo "Services started. Waiting for health checks..."
+        sleep 10
+        echo "Services are up."
+        ;;
+    stop)
+        echo "Stopping FIWARE services..."
+        docker-compose -f $COMPOSE_FILE down
+        echo "Services stopped."
+        ;;
+    status)
+        echo "Checking status of FIWARE services..."
+        docker-compose -f $COMPOSE_FILE ps
+        ;;
+    logs)
+        echo "Showing logs for FIWARE services..."
+        docker-compose -f $COMPOSE_FILE logs -f
+        ;;
+    *)
+        echo "Usage: $0 {start|stop|status|logs}"
+        exit 1
+        ;;
+esac
